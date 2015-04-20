@@ -16,7 +16,7 @@ try{
     string sCode = MailCode.getCode(sEmail);
 
     // make the email
-    string sContent = String.Format("from=noreply.salesucation.com&to={0}&subject={1}+is+your+code+...+please+enter+it+in+the+app&text={1}+is+you+code.+Thanks+for+your+interest+in+the+Epic+Network&api_user={2}&api_key={3}", 
+    string sContent = String.Format("from=noreply.salesucation.com&to={0}&subject={1}+is+your+code+...+please+enter+it+in+the+app&text={1}+is+you+code.&api_user={2}&api_key={3}", 
         sEmail, sCode, "your sendgrid username here", "your sendgrid password here");
 
 
