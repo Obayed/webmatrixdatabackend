@@ -1,0 +1,31 @@
+﻿@{
+WebClient wc = new WebClient();
+
+string sInput = "";
+var sMessage = "";
+var sResult = "failure";
+
+try{
+
+    // get and decode json
+
+    sInput = new StreamReader(Request.InputStream).ReadToEnd();
+    var oInput = Json.Decode(sInput);
+    var sEmail = oInput.email;
+    if(MailCode.getCode(sEmail) != oInput.code){
+        throw new Exception(oInput.code + " is an invalid verification code. Please correct, or request the verification code again.");
+    }
+    sMessage = oInput.code + " verified.";
+    sResult = "success";
+}catch(Exception e){
+    sMessage = e.Message.Replace("\r\n", string.Empty);
+}finally{
+    var oRC = new {
+        result = sResult,
+        message = sMessage,
+    };
+    Json.Write(oRC, Response.Output);
+}
+    
+}
+

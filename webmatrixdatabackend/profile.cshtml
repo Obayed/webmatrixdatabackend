@@ -1,0 +1,53 @@
+﻿@using WebMatrix.Data;
+@{
+
+var sMessage = "";
+var sResult = "failure";
+var sHeading = "Error";
+WebClient wc = new WebClient();
+try{
+
+    // get and decode json
+
+    var sInput = new StreamReader(Request.InputStream).ReadToEnd();
+    var oInput = Json.Decode(sInput);
+    if(MailCode.getCode(oInput.email) != oInput.code){
+        throw new Exception(oInput.code + " is an invalid verification code. Please correct, or request the verification code again.");
+    }
+
+    Database db = Database.Open("Contacts");
+    try{
+        // try insert first
+        string sSQL = "INSERT INTO Users(alias, email) VALUES(@0, @1)";
+        db.Query(sSQL, oInput.alias, oInput.email);
+        sMessage = "Thank-you for joining";
+        sResult = "success";
+        sHeading = "Signup Complete";
+    }catch(Exception e){
+        // now try update
+        try{
+            string sUpdate = "UPDATE Users set alias = @0 WHERE email = @1";
+            db.Query(sUpdate, oInput.alias, oInput.email);
+            sMessage = "Thank-you for updating your profile";
+            sResult = "success";
+            sHeading = "Profile Updated";
+        }catch(Exception eInner){
+            sMessage = eInner.Message;      
+        }
+    }
+}catch(Exception e)
+{
+    sMessage = e.Message;      
+}finally{
+    // make the string to send back to the phone
+    var oRC = new {
+        result = sResult,
+        message = sMessage,
+        heading = sHeading
+    };
+    Json.Write(oRC, Response.Output);
+    wc.Dispose();
+}
+    
+}
+

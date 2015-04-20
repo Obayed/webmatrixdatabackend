@@ -1,0 +1,43 @@
+﻿@{
+
+WebClient wc = new WebClient();
+
+string sInput = "";
+var sMessage = "";
+var sResult = "failure";
+
+try{
+
+    // get and decode json
+
+    sInput = new StreamReader(Request.InputStream).ReadToEnd();
+    var oInput = Json.Decode(sInput);
+    var sEmail = oInput.email;
+    string sCode = MailCode.getCode(sEmail);
+
+    // make the email
+    string sContent = String.Format("from=noreply.salesucation.com&to={0}&subject={1}+is+your+code+...+please+enter+it+in+the+app&text={1}+is+you+code.+Thanks+for+your+interest+in+the+Epic+Network&api_user={2}&api_key={3}", 
+        sEmail, sCode, "your sendgrid username here", "your sendgrid password here");
+
+
+    wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+    var sResponse = wc.UploadString("https://api.sendgrid.com/api/mail.send.json", sContent);
+    var oResponse = Json.Decode(sResponse);
+    sResult = oResponse.message;
+    if(sResult == "success"){
+        sMessage = "Verification code email sent to " + sEmail;
+    }else{
+        sMessage = String.Join(",", oResponse.messages);
+    }
+}catch(Exception e){
+    sMessage = e.Message.Replace("\r\n", string.Empty) + " input was " + sInput;
+}finally{
+    var oRC = new {
+        result = sResult,
+        message = sMessage,
+    };
+    Json.Write(oRC, Response.Output);
+}
+    
+}
+

@@ -1,0 +1,8 @@
+﻿@using WebMatrix.Data;
+@{
+    var db = Database.Open("Contacts");
+    var sql = "SELECT * FROM Contacts";
+    var data = db.Query(sql);
+    var json = Json.Encode(data);
+    Response.Write(json);
+}
