@@ -91,6 +91,7 @@
     <Content Include="mailout.cshtml" />
     <Content Include="profile.cshtml" />
     <Content Include="verifymail.cshtml" />
+    <Content Include="www\index.html" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,8 +1,25 @@
 ﻿@using WebMatrix.Data;
 @{
     var db = Database.Open("Contacts");
-    var sql = "SELECT * FROM Contacts";
-    var data = db.Query(sql);
-    var json = Json.Encode(data);
-    Response.Write(json);
+    if (IsPost)
+    {
+        var sInput = new StreamReader(Request.InputStream).ReadToEnd();
+        var oInput = Json.Decode(sInput);
+        var sql = "insert into Contacts(Name) values(@0)";
+        db.Query(sql, oInput.Name);
+        // make the string to send back to the phone
+        var oRC = new
+        {
+            result = "success"
+        };
+        Json.Write(oRC, Response.Output);
+    }
+    else
+    {
+        var sql = "SELECT * FROM Contacts";
+        var data = db.Query(sql);
+        var json = Json.Encode(data);
+        Response.Write(json);
+    }
+    
 }
