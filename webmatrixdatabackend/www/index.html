@@ -25,6 +25,7 @@
                 },
                 onDeviceReady: function () {
                     $scope.sUrl = "https://mycontacts.apphb.com/contacts";
+                    $http.get($scope.sUrl).success($scope.onData);
                 }
             });
             $scope.init();
