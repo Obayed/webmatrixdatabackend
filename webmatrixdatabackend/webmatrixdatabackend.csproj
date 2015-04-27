@@ -91,7 +91,9 @@
     <Content Include="mailout.cshtml" />
     <Content Include="profile.cshtml" />
     <Content Include="verifymail.cshtml" />
+    <Content Include="www\config.xml" />
     <Content Include="www\index.html" />
+    <Content Include="www\phonegap.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
