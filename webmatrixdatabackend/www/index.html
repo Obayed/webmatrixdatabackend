@@ -20,7 +20,7 @@
                     var oContact = { Name: $scope.newName };
                     
                     $http.post($scope.sUrl, oContact).success(function (oMessage) {
-                        $scope.contacts.push(oContact);
+                        $scope.contacts.push(oContact); $scope.newName= "";
                     });
                 },
                 onDeviceReady: function () {
